@@ -2,10 +2,8 @@ cmake_minimum_required(VERSION 3.26)
 
 project(cmaketest)
 
-#g++でコンパイル
-set(CMAKE_CXX_COMPILER clang++)
-set(CMAKE_C_COMPILER clang)
 
+#---設定
 #compile_commands.jsonを生成する
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
@@ -19,7 +17,17 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DBUILD_TYPE=\\\"Debug\\\"")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DBUILD_TYPE=\\\"Release\\\"")
 
-include_directories("includes")
-add_library(temp STATIC temp.cpp)
+
+#---コンパイル
+#メイン
 add_executable(main index.cpp)
+
+#spdlog
+set(spdlog_DIR "spdlog/build")
+find_package(spdlog REQUIRED)
+include_directories(${spdlog_SOURCE_DIR})
+target_link_libraries(main spdlog::spdlog)
+
+#temp
+add_library(temp STATIC temp.cpp)
 target_link_libraries(main temp)
